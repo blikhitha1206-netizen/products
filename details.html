@@ -1,0 +1,114 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+
+        .card {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        h2 {
+            margin-top: 15px;
+        }
+
+        .price {
+            font-size: 20px;
+            color: green;
+            margin: 10px 0;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .buy {
+            background: #28a745;
+            color: white;
+        }
+
+        .cart {
+            background: #007bff;
+            color: white;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="detailsCard"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+fetch(`https://dummyjson.com/products/${id}`)
+    .then(res => res.json())
+    .then(product => {
+
+        document.getElementById("detailsCard").innerHTML = `
+            <img src="${product.thumbnail}" />
+            <h2>${product.title}</h2>
+            <p>${product.description}</p>
+            <div class="price">₹ ${product.price}</div>
+
+            <div class="buttons">
+                <button class="buy" onclick="buyNow()">Buy Now</button>
+                <button class="cart" onclick="addToCart(${product.id})">Add to Cart</button>
+            </div>
+
+            <div class="message" id="msg"></div>
+        `;
+    });
+
+function buyNow() {
+    document.getElementById("msg").innerText =
+        "✅ Item ordered successfully!";
+}
+
+function addToCart(productId) {
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push(productId);
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    document.getElementById("msg").innerText =
+        "🛒 Item added to cart successfully!";
+}
+</script>
+
+</body>
+</html>
